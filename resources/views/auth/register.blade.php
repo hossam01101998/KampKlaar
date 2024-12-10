@@ -39,6 +39,22 @@
                             </div>
                         </div>
 
+
+                        <div class="row mb-3">
+                            <label for="youth_movement" class="col-md-4 col-form-label text-md-end">{{ __('Youth Movement') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="youth_movement" type="text" class="form-control @error('youth_movement') is-invalid @enderror" name="youth_movement" required autocomplete="youth_movement">
+
+                                @error('youth_movement')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+
                         <div class="row mb-3">
                             <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
 
