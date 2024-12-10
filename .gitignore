@@ -3,11 +3,20 @@
 /public/build
 /public/hot
 /public/storage
+/public/js/*.map
+/public/css/*.map
+
 /storage/*.key
 /storage/pail
-/vendor
+/storage/*.log
+/storage/*.mysql
+/storage/framework/*
+!/storage/framework/.gitignore
+/storage/logs/*
+!/storage/logs/.gitignore
+/vendor/
 .env
-.env.backup
+.env.*.backup
 .env.production
 .phpactor.json
 .phpunit.result.cache
@@ -21,3 +30,37 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# Laravel Cache & Logs
+
+
+# Node & npm
+
+# Assets
+/public/mix-manifest.json
+/public/css/*
+!/public/css/.gitignore
+/public/js/*
+!/public/js/.gitignore
+
+# IDE & System Files
+*.DS_Store
+*.vscode/
+.idea/
+*.swp
+*~
+/nbproject/
+/Thumbs.db
+
+# Optional: Tests
+/tests/coverage/
+
+# Sentry debug files
+*.sentryclirc
+
+# User-specific ignore
+/.phpunit.result.cache
+
+# Ignoring compiled classes
+/bootstrap/cache/*
+!/bootstrap/cache/.gitignore
