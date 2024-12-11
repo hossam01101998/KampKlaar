@@ -6,8 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Reservation extends Model
 {
+
+    protected $primaryKey = 'reservation_id';
+    
     protected $fillable = ['user_id',
     'item_id',
+    'quantity',
+    'status',
     'start_date',
     'end_date'];
 

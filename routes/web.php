@@ -29,3 +29,9 @@ Route::get('items/create', [ItemController::class, 'create'])->name('items.creat
 Route::post('items', [ItemController::class, 'store'])->name('items.store');
 
 
+Route::resource('reservations', ReservationController::class);
+
+
+Route::get('reservations/{reservation_id}/edit', [ReservationController::class, 'edit'])->name('reservations.edit');
+Route::put('reservations/{reservation_id}', [ReservationController::class, 'update'])->name('reservations.update');
+Route::delete('reservations/{reservation_id}', [ReservationController::class, 'destroy'])->name('reservations.destroy');

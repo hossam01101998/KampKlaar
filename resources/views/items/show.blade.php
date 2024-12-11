@@ -44,6 +44,36 @@
     </div>
 </div>
 
+
+@auth
+        <form action="{{ route('reservations.store') }}" method="POST">
+            @csrf
+            <input type="hidden" name="user_id" value="{{ auth()->user()->user_id }}">
+            <input type="hidden" name="item_id" value="{{ $item->item_id }}">
+
+            <div class="mb-3">
+                <label for="quantity" class="form-label">Quantity to Reserve</label>
+                <input type="number" name="quantity" id="quantity" class="form-control" min="1" max="{{ $item->quantity }}" required>
+                <small class="form-text text-muted">Max quantity available: {{ $item->quantity }}</small>
+            </div>
+
+            <div class="mb-3">
+                <label for="start_date" class="form-label">Start Date</label>
+                <input type="date" name="start_date" id="start_date" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="end_date" class="form-label">End Date</label>
+                <input type="date" name="end_date" id="end_date" class="form-control" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Reserve</button>
+        </form>
+    @else
+        <p>Please <a href="{{ route('login') }}">login</a> to reserve this item.</p>
+    @endauth
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
