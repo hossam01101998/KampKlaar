@@ -11,6 +11,12 @@ class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+    
+    protected $primaryKey = 'user_id';
+    public function isAdmin()
+    {
+        return $this->role === 'Admin';
+    }
 
     /**
      * The attributes that are mass assignable.

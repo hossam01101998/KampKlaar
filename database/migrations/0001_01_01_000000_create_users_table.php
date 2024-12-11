@@ -11,15 +11,28 @@ return new class extends Migration
      */
     public function up(): void
     {
+        
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
+            // Custom primary key
+            $table->id('user_id'); // This will be AUTO_INCREMENT in MySQL by default
+    
+            // Other fields with constraints
+            $table->string('username', 50)->unique()->nullable(false); // UNIQUE and NOT NULL
+            $table->string('password', 255)->nullable(false); // NOT NULL
+            $table->string('email', 100)->unique()->nullable(false); // UNIQUE and NOT NULL
+            
+            // ENUM for 'role' column
+            $table->enum('role', ['admin', 'leader'])->default('leader');
+            
+            // Non-nullable 'youth_movement' field
+            $table->string('youth_movement', 100)->nullable(false); 
+    
+            // Timestamps for created_at and updated_at
             $table->timestamps();
+            $table->string('remember_token', 100)->nullable();
         });
+        
+        
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
@@ -42,6 +55,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+
         Schema::dropIfExists('users');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');

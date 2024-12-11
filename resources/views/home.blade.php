@@ -15,6 +15,18 @@
                     @endif
 
                     {{ __('You are logged in!') }}
+
+                    @foreach ($users as $user)
+                        {{ $user->name }} - {{ $user->email }}
+
+                        @if (!$user->isAdmin())
+                        <form action="{{ route('admin.make', $user->id) }}" method="POST">
+                            @csrf
+                            <button type="submit">Make Admin</button>
+                        </form>
+                        @endif
+                    @endforeach
+
                 </div>
             </div>
         </div>
