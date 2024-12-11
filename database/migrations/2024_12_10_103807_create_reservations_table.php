@@ -16,7 +16,8 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users', 'user_id')->onDelete('cascade');
             $table->foreignId('item_id')->constrained('inventory', 'item_id')->onDelete('cascade');
             $table->integer('quantity');
-            $table->string('status', 50)->default('pending');
+            $table->boolean('status')->default(true);
+            //it will be confirmed by default
             $table->date('start_date');
             $table->date('end_date');
             $table->timestamps();

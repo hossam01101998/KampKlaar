@@ -63,19 +63,12 @@
         @endif
     </div>
 
+    <input type="hidden" name="status" value="true">
 
 
 
-        <!-- only admin -->
+       <!-- only admin -->
 
-        <div class="mb-3">
-            <label for="status" class="form-label">Status</label>
-            <select name="status" id="status" class="form-control">
-                <option value="pending" {{ $reservation->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                <option value="confirmed" {{ $reservation->status == 'confirmed' ? 'selected' : '' }}>Confirmed</option>
-                <option value="canceled" {{ $reservation->status == 'canceled' ? 'selected' : '' }}>Canceled</option>
-            </select>
-        </div>
 
         <button type="submit" class="btn btn-primary">Update Reservation</button>
     </form>

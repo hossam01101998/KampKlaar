@@ -39,7 +39,11 @@
                     <td>{{ $reservation->start_date }}</td>
                     <td>{{ $reservation->end_date }}</td>
                     <td>{{ $reservation->quantity }}</td>
-                    <td>{{ $reservation->status }}</td>
+
+                    
+
+                    <td>{{ $reservation->status ? 'Confirmed' : 'Cancelled' }}</td>
+
 
                     <td>
                         <a href="{{ route('reservations.show', $reservation->reservation_id) }}" class="btn btn-info btn-sm">View</a>

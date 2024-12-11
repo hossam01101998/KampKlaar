@@ -41,8 +41,11 @@
                 <button type="submit" class="btn btn-danger">Delete</button>
             </form>
         </div>
-    </div>
-</div>
+
+
+
+<br>
+<br>
 
 
 @auth
@@ -59,12 +62,22 @@
 
             <div class="mb-3">
                 <label for="start_date" class="form-label">Start Date</label>
-                <input type="date" name="start_date" id="start_date" class="form-control" required>
+                <input type="date"
+                       name="start_date"
+                       id="start_date"
+                       class="form-control"
+                       value="{{ old('start_date', isset($reservation->start_date) ? $reservation->start_date : now()->format('Y-m-d')) }}"
+                       required>
             </div>
 
             <div class="mb-3">
                 <label for="end_date" class="form-label">End Date</label>
-                <input type="date" name="end_date" id="end_date" class="form-control" required>
+                <input type="date"
+                       name="end_date"
+                       id="end_date"
+                       class="form-control"
+                       value="{{ old('end_date', isset($reservation->end_date) ? $reservation->end_date : now()->format('Y-m-d')) }}"
+                       required>
             </div>
 
             <button type="submit" class="btn btn-primary">Reserve</button>
@@ -72,7 +85,8 @@
     @else
         <p>Please <a href="{{ route('login') }}">login</a> to reserve this item.</p>
     @endauth
-
+    </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

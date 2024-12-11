@@ -34,10 +34,15 @@ class ReservationController extends Controller
     public function store(Request $request)
 {
     $request->validate([
-        'start_date' => 'required|date',
-        'end_date' => 'required|date',
+
+        'start_date' => 'required|date|before_or_equal:end_date',
+        'end_date' => 'required|date|after:start_date',
         'quantity' => 'required|integer|min:1',
-        'item_id' => 'required|exists:inventory,item_id',
+        'item_id' => 'required|exists:inventory,item_id'
+
+    ], [
+        'start_date.before_or_equal' => 'The start date must be before or equal to the end date.',
+        'end_date.after' => 'The end date must be after the start date.',
     ]);
 
     $item = Item::findOrFail($request->item_id);
@@ -48,15 +53,16 @@ class ReservationController extends Controller
         return back()->with('error', 'The quantity is higher than stock.');
     }
 
+    $item->decrement('quantity', $request->quantity);
+
     Reservation::create([
         'user_id' => $request->user_id,
         'item_id' => $request->item_id,
         'start_date' => $request->start_date,
         'end_date' => $request->end_date,
         'quantity' => $request->quantity,
-        'status' => 'pending',  // by default it will be pending
+        'status' => true,  // by default it will be condirmed
         ]);
-
 
 
         return redirect()->route('reservations.index')->with('success', 'Reservation created successfully.');
@@ -94,16 +100,29 @@ class ReservationController extends Controller
         'start_date' => 'required|date',
         'end_date' => 'required|date',
         'quantity' => 'required|integer|min:1',
-        'status' => 'required|string',
+        'status' => 'required|boolean',
     ]);
 
     $reservation = Reservation::findOrFail($id);
     $item = Item::findOrFail($reservation->item_id);
 
-    if ($request->quantity > $item->quantity) {
-       // return back()->with('error', 'The quantity is higher than stock.');
+
+    //check firts if the quantity is higher than the stock
+
+    $quantityChange = $request->quantity - $reservation->quantity;
+
+    if ($quantityChange > 0 && $quantityChange > $item->quantity) {
         return back()->withErrors(['quantity' => 'The quantity is higher than stock.']);
     }
+
+    $item->decrement('quantity', $quantityChange);
+
+
+
+    if ($request->status == false && $reservation->status == true) {
+        $item->increment('quantity', $reservation->quantity);
+    }
+
 
     $reservation->update([
         'start_date' => $request->start_date,
@@ -119,6 +138,13 @@ class ReservationController extends Controller
     public function destroy($id)
     {
         $reservation = Reservation::where('reservation_id', $id)->firstOrFail();
+
+        $item = Item::findOrFail($reservation->item_id);
+
+        if ($reservation->status) {
+            $item->increment('quantity', $reservation->quantity);
+        }
+
         $reservation->delete();
 
         return redirect()->route('reservations.index')->with('success', 'Reservation deleted successfully.');
