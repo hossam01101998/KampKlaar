@@ -16,15 +16,31 @@
 
                     {{ __('You are logged in!') }}
 
-                    @foreach ($users as $user)
-                        {{ $user->name }} - {{ $user->email }}
+                    
 
-                        @if (!$user->isAdmin())
+
+                    @foreach ($users as $user)
+
+
+                        @if (auth()->check())
+                            <p>Welcome, {{ auth()->user()->name }}!</p>
+                            
+                            @if (!$user->role === 'Admin')
+                                {{ dd($user) }}
+                            @endif
+                        @else
+                            <p>You are not logged in.</p>
+                        @endif
+                        {{ $user->name }} - {{ $user->email }}  
+
+                        
+                        
+                        <?php/*
                         <form action="{{ route('admin.make', $user->id) }}" method="POST">
                             @csrf
                             <button type="submit">Make Admin</button>
-                        </form>
-                        @endif
+                        </form>*/?>
+                        
                     @endforeach
 
                 </div>
