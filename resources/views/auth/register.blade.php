@@ -12,12 +12,12 @@
                         @csrf
 
                         <div class="row mb-3">
-                            <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('Name') }}</label>
+                            <label for="username" class="col-md-4 col-form-label text-md-end">{{ __('Username') }}</label>
 
                             <div class="col-md-6">
-                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+                                <input id="username" type="text" class="form-control @error('username') is-invalid @enderror" name="username" value="{{ old('username') }}" required autocomplete="name" autofocus>
 
-                                @error('name')
+                                @error('username')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -39,7 +39,23 @@
                             </div>
                         </div>
 
+                         <!-- Role -->
+                         <div class="row mb-3">
+                            <label for="role" class="col-md-4 col-form-label text-md-end">Role</label>
+                            <div class="col-md-6">
+                                <select id="role" class="form-control @error('role') is-invalid @enderror" name="role" required>
+                                    <option value="leader">Leader</option>
+                                    <option value="admin">Admin</option>
+                                </select>
+                                @error('role')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
 
+                        <!-- Youth Movement -->
                         <div class="row mb-3">
                             <label for="youth_movement" class="col-md-4 col-form-label text-md-end">{{ __('Youth Movement') }}</label>
 
@@ -84,6 +100,10 @@
                                 </button>
                             </div>
                         </div>
+
+
+
+
                     </form>
                 </div>
             </div>

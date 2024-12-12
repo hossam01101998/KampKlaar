@@ -13,14 +13,18 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id('user_id');
-            $table->string('name');
-            $table->string('email')->unique();
+            // This will be AUTO_INCREMENT in MySQL by default
+            $table->string('username',50)->unique()->nullable(false); // UNIQUE and NOT NULL
+
+            $table->string('password', 255)->nullable(false); // NOT NULL
+            $table->string('email', 100)->unique()->nullable(false); // UNIQUE and NOT NULL
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+
+            $table->enum('role', ['admin', 'leader'])->default('leader');
+            $table->string('youth_movement', 100)->nullable(false);
+
             $table->rememberToken();
             $table->timestamps();
-            $table->enum('role', ['admin', 'leader'])->default('leader');
-            $table->string('youth_movement', 100);
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

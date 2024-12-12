@@ -15,11 +15,58 @@
                     @endif
 
                     {{ __('You are logged in!') }}
+
+
+                    <br>
+
+                    @foreach ($users as $user)
+                    {{ $user->name }} - {{ $user->email }}
+
+                    @if (auth()->check())
+                        <p>Welcome, {{ auth()->user()->name }}!</p>
+
+                        @if (!$user->role === 'Admin')
+                            {{ dd($user) }}
+                        @endif
+                    @else
+                        <p>You are not logged in.</p>
+                    @endif
+                    {{ $user->name }} - {{ $user->email }}
+
+
+
+
+                    @if (!$user->isAdmin())
+                        <form action="{{ route('admin.make', $user->id) }}" method="POST">
+                            @csrf
+                            <button type="submit">Make Admin</button>
+                        </form>
+                        @endif
+                    @endforeach
+
+
+                    <?php/*
+                    <form action="{{ route('admin.make', $user->id) }}" method="POST">
+                        @csrf
+                        <button type="submit">Make Admin</button>
+                    </form>*/?>
+
+
+
+                @endforeach
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
+
+
+
+
+
+
 
 
 <div class="container mt-5">
