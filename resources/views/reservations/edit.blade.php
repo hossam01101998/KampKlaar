@@ -63,11 +63,23 @@
         @endif
     </div>
 
-    <input type="hidden" name="status" value="true">
-
+    
 
 
        <!-- only admin -->
+
+       @if(auth()->user()->is_admin)
+
+       <div class="mb-3">
+           <label for="status" class="form-label">Status</label>
+           <select name="status" id="status" class="form-control">
+               <option value="1" {{ $reservation->status == true ? 'selected' : '' }}>Confirmed</option>
+               <option value="0" {{ $reservation->status == false ? 'selected' : '' }}>Canceled</option>
+           </select>
+       </div>
+       @else
+       <input type="hidden" name="status" value="true">
+       @endif
 
 
         <button type="submit" class="btn btn-primary">Update Reservation</button>
