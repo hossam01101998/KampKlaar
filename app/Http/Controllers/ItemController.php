@@ -4,15 +4,34 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ItemController extends Controller
 {
 
 
-    public function index()
+    public function index(Request $request)
     {
-        $items = Item::all();
-        return view('items.index', compact('items'));
+
+
+
+        // search bar
+        $search = $request->input('search');
+
+        //sortings
+        $sortBy = $request->input('sort_by', 'item_id');
+        $direction = $request->input('direction', 'asc');
+
+
+        $user = Auth::user();
+        $items = Item::when($search, function ($query, $search) {
+            return $query->where('name', 'LIKE', '%' . $search . '%')
+                         ->orWhere('description', 'LIKE', '%' . $search . '%')
+                         ->orWhere('place', 'LIKE', '%' . $search . '%');
+        })->orderBy($sortBy, $direction)->get();
+
+
+        return view('items.index', compact('items', 'user', 'search', 'sortBy', 'direction'));
     }
 
     public function create ()
@@ -24,11 +43,10 @@ class ItemController extends Controller
     {
 
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'quantity' => 'required|integer',
-            'youth_movement' => 'required|string|max:100',
-            'place' => 'required|string|max:100'
+            'name' => 'required|string|min:3|max:255',
+            'description' => 'nullable|min:10|string',
+            'quantity' => 'required|integer|min:1|max:9999',
+            'place' => 'required|string|min:3|max:100'
         ]);
 
 
@@ -36,7 +54,7 @@ class ItemController extends Controller
             'name' => $request->name,
             'description' => $request->description,
             'quantity' => $request->quantity,
-            'youth_movement' => $request->youth_movement,
+            'youth_movement' => Auth::user()->youth_movement,
             'place' => $request->place
         ]);
 
@@ -57,11 +75,10 @@ class ItemController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'quantity' => 'required|integer',
-            'youth_movement' => 'required|string|max:100',
-            'place' => 'required|string|max:100',
+            'name' => 'required|string|min:3|max:255',
+            'description' => 'nullable|min:10|string',
+            'quantity' => 'required|integer|min:1|max:9999',
+            'place' => 'required|string|min:3|max:100',
         ]);
 
 
@@ -80,7 +97,7 @@ class ItemController extends Controller
 
     public function destroy($id)
     {
-        
+
         $item = Item::where('item_id', $id)->firstOrFail();
         $item->delete();
 

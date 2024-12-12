@@ -54,9 +54,8 @@ class RegisterController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'youth_movement' => ['required', 'string', 'max:100'],
             'role' => ['required', 'in:admin,leader'],
-            'youth_movement' => ['required', 'string', 'max:100'],
-            'role' => $data['role'],
-            'youth_movement' => $data['youth_movement'],
+            
+
         ]);
     }
 
@@ -73,6 +72,7 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'youth_movement' => $data['youth_movement'],
+            'role' => $data['role'],
         ]);
     }
 }

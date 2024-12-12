@@ -1,12 +1,6 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Reservation</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
+@extends('layouts.app')
+
+@section('content')
 
 <div class="container mt-5">
     <h2>Edit Reservation</h2>
@@ -63,12 +57,11 @@
         @endif
     </div>
 
-    
+
 
 
        <!-- only admin -->
-
-       @if(auth()->user()->is_admin)
+         @if(auth()->user()->role == 'admin')
 
        <div class="mb-3">
            <label for="status" class="form-label">Status</label>
@@ -78,7 +71,7 @@
            </select>
        </div>
        @else
-       <input type="hidden" name="status" value="true">
+       <input type="hidden" name="status" value="1">
        @endif
 
 
@@ -86,6 +79,4 @@
     </form>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+@endsection

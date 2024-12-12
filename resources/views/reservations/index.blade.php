@@ -1,12 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reservations List</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
+@extends('layouts.app')
+
+@section('content')
 <div class="container mt-5">
     <h2>Reservations List</h2>
 
@@ -15,16 +9,51 @@
 
     @endif
 
+
+    <!-- search -->
+    <form action="{{ route('reservations.index') }}" method="GET" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="search" class="form-control" placeholder="Search reservations..." value="{{ old('search', $search ?? '') }}">
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+    </form>
+
+
+    <form action="{{ route('reservations.index') }}" method="GET" class="mb-3">
+        <div class="row">
+            <div class="col-md-4">
+                <select name="sort_by" class="form-select" onchange="this.form.submit()">
+                    <option value="reservation_id" {{ $sortBy == 'reservation_id' ? 'selected' : '' }}>ID</option>
+                    <option value="user_id" {{ $sortBy == 'user_id' ? 'selected' : '' }}>User</option>
+                    <option value="item_id" {{ $sortBy == 'item_id' ? 'selected' : '' }}>Item</option>
+                    <option value="start_date" {{ $sortBy == 'start_date' ? 'selected' : '' }}>Start Date</option>
+                    <option value="end_date" {{ $sortBy == 'end_date' ? 'selected' : '' }}>End Date</option>
+                    <option value="quantity" {{ $sortBy == 'quantity' ? 'selected' : '' }}>Quantity</option>
+                    <option value="status" {{ $sortBy == 'status' ? 'selected' : '' }}>Status</option>
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <select name="direction" class="form-select" onchange="this.form.submit()">
+                    <option value="asc" {{ $direction == 'asc' ? 'selected' : '' }}>Ascending</option>
+                    <option value="desc" {{ $direction == 'desc' ? 'selected' : '' }}>Descending</option>
+                </select>
+            </div>
+        </div>
+    </form>
+
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>User</th>
-                <th>Item</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Quantity</th>
-                <th>Status</th>
+
+                <th><a href="{{ route('reservations.index', ['sort_by' => 'reservation_id', 'direction' => $direction === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}">ID</a></th>
+                <th><a href="{{ route('reservations.index', ['sort_by' => 'user_id', 'direction' => $direction === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}">User</a></th>
+                <th><a href="{{ route('reservations.index', ['sort_by' => 'item_id', 'direction' => $direction === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}">Item</a></th>
+                <th><a href="{{ route('reservations.index', ['sort_by' => 'start_date', 'direction' => $direction === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}">Start Date</a></th>
+                <th><a href="{{ route('reservations.index', ['sort_by' => 'end_date', 'direction' => $direction === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}">End Date</a></th>
+                <th><a href="{{ route('reservations.index', ['sort_by' => 'quantity', 'direction' => $direction === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}">Quantity</a></th>
+                <th><a href="{{ route('reservations.index', ['sort_by' => 'status', 'direction' => $direction === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}">Status</a></th>
+
                 <th>Actions</th>
 
             </tr>
@@ -34,20 +63,25 @@
             @forelse($reservations as $reservation)
                 <tr>
                     <td>{{ $reservation->reservation_id }}</td>
-                    <td>{{ $reservation->user->name }}</td>
+                    <td>{{ $reservation->user->username }}</td>
                     <td>{{ $reservation->item->name }}</td>
                     <td>{{ $reservation->start_date }}</td>
                     <td>{{ $reservation->end_date }}</td>
                     <td>{{ $reservation->quantity }}</td>
 
-                    
+
 
                     <td>{{ $reservation->status ? 'Confirmed' : 'Cancelled' }}</td>
 
 
                     <td>
                         <a href="{{ route('reservations.show', $reservation->reservation_id) }}" class="btn btn-info btn-sm">View</a>
+                        @if ($reservation->status)
                         <a href="{{ route('reservations.edit', $reservation->reservation_id) }}" class="btn btn-warning btn-sm">Edit</a>
+
+
+                        @endif
+
                         <form action="{{ route('reservations.destroy', $reservation->reservation_id) }}" method="POST" class="d-inline">
                             @csrf
                             @method('DELETE')
@@ -63,6 +97,4 @@
         </tbody>
     </table>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+@endsection

@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>KampKlaar</title>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
@@ -21,7 +21,7 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+                    KampKlaar
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -32,6 +32,33 @@
                     <ul class="navbar-nav me-auto">
 
                     </ul>
+
+                    <div class="d-flex justify-content-center align-items-center gap-2">
+
+                        @auth
+                        <a href="{{ route('profile') }}" class="nav-link">Profile</a>
+
+                        <a href="{{ route('items.index') }}" class="btn btn-primary">
+                            <i class="bi bi-box"></i> View Items
+                        </a>
+                        <a href="{{ route('reservations.index') }}" class="btn btn-success">
+                            <i class="bi bi-calendar-check"></i> View Reservations
+                        </a>
+                        <a href="{{ route('reservations.index') }}" class="btn btn-danger">
+                            <i class="bi bi-exclamation-triangle"></i> View Damage Reports
+                        </a>
+                        <a href="{{ route('reservations.index') }}" class="btn btn-info">
+                            <i class="bi bi-person"></i> My Profile
+                        </a>
+                        <a href="{{ route('reservations.index') }}" class="btn btn-warning">
+                            <i class="bi bi-gear"></i> Settings
+                        </a>
+
+                    @endauth
+
+                        <a href="{{ route('privacy-policy') }}" class="ml-2">Privacy Policy</a>
+                    </div>
+
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
@@ -72,7 +99,10 @@
             </div>
         </nav>
 
+
+
         <main class="py-4">
+
             @yield('content')
         </main>
     </div>

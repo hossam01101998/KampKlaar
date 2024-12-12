@@ -1,13 +1,6 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Article</title>
+@extends('layouts.app')
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
+@section('content')
 
 <div class="container mt-5">
     <h2>Edit Article</h2>
@@ -47,10 +40,7 @@
             <input type="number" name="quantity" id="quantity" class="form-control" value="{{ old('quantity', $item->quantity) }}" required>
         </div>
 
-        <div class="mb-3">
-            <label for="youth_movement" class="form-label">Youth Movement</label>
-            <input type="text" name="youth_movement" id="youth_movement" class="form-control" value="{{ old('youth_movement', $item->youth_movement) }}" required>
-        </div>
+
 
         <div class="mb-3">
             <label for="place" class="form-label">Place</label>
@@ -61,6 +51,4 @@
     </form>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+@endsection

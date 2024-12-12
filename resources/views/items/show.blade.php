@@ -1,13 +1,6 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Item</title>
+@extends('layouts.app')
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
+@section('content')
 
 <div class="container mt-5">
     <h2>Item Details</h2>
@@ -27,7 +20,6 @@
             <p><strong>Name:</strong> {{ $item->name }}</p>
             <p><strong>Description:</strong> {{ $item->description }}</p>
             <p><strong>Quantity:</strong> {{ $item->quantity }}</p>
-            <p><strong>Youth Movement:</strong> {{ $item->youth_movement }}</p>
             <p><strong>Place:</strong> {{ $item->place }}</p>
             <p><strong>Created At:</strong> {{ $item->created_at }}</p>
             <p><strong>Updated At:</strong> {{ $item->updated_at }}</p>
@@ -49,6 +41,8 @@
 
 
 @auth
+
+@if ($item->quantity > 0)
         <form action="{{ route('reservations.store') }}" method="POST">
             @csrf
             <input type="hidden" name="user_id" value="{{ auth()->user()->user_id }}">
@@ -82,12 +76,14 @@
 
             <button type="submit" class="btn btn-primary">Reserve</button>
         </form>
+        @else
+    <p class="text-danger">Sorry, this item is out of stock.</p>
+@endif
+
     @else
         <p>Please <a href="{{ route('login') }}">login</a> to reserve this item.</p>
     @endauth
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+@endsection

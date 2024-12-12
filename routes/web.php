@@ -9,6 +9,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserProfileController;
 
 
 Route::get('/', function () {
@@ -22,10 +23,12 @@ Auth::routes();
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
-    Route::post('/admin/make-admin/{id}', [AdminController::class, 'makeAdmin'])->name('admin.make');
+    Route::post('/admin/make-admin/{user_id}', [AdminController::class, 'makeAdmin'])->name('admin.make');
 });
+
+
 Route::get('/users', [UserController::class, 'index']);
-Route::get('/users/{id}', [UserController::class, 'show']);
+Route::get('/users/{user_id}', [UserController::class, 'show']);
 
 
 
@@ -47,3 +50,17 @@ Route::resource('reservations', ReservationController::class);
 Route::get('reservations/{reservation_id}/edit', [ReservationController::class, 'edit'])->name('reservations.edit');
 Route::put('reservations/{reservation_id}', [ReservationController::class, 'update'])->name('reservations.update');
 Route::delete('reservations/{reservation_id}', [ReservationController::class, 'destroy'])->name('reservations.destroy');
+
+
+Route::get('/privacy-policy', function () {
+    return view('privacy-policy');
+})->name('privacy-policy');
+
+
+Route::get('/profile', [UserProfileController::class, 'show'])->name('profile')->middleware('auth');
+Route::get('/profile/edit', [UserProfileController::class, 'edit'])->name('profile.edit')->middleware('auth');
+Route::post('/profile/edit', [UserProfileController::class, 'update'])->name('profile.update')->middleware('auth');
+Route::put('/profile', [UserProfileController::class, 'update'])->name('profile.update')->middleware('auth');
+
+
+

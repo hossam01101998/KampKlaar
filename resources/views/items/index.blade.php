@@ -1,22 +1,52 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Items List</title>
+@extends('layouts.app')
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
+@section('content')
+
+    @auth
+
 
 <div class="container mt-5">
-    <h2>Items List</h2>
+    <h2>Items List of "{{ $user->youth_movement }}":</h2>
+
+
+
+    <form action="{{ route('items.index') }}" method="GET" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="search" class="form-control" placeholder="Search items..." value="{{ old('search', $search ?? '') }}">
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+    </form>
+
+    <!-- order -->
+
+    <form action="{{ route('items.index') }}" method="GET" class="mb-3">
+        <div class="row">
+            <div class="col-md-4">
+                <select name="sort_by" class="form-select" onchange="this.form.submit()">
+                    <option value="item_id" {{ $sortBy == 'item_id' ? 'selected' : '' }}>ID</option>
+                    <option value="name" {{ $sortBy == 'name' ? 'selected' : '' }}>Name</option>
+                    <option value="quantity" {{ $sortBy == 'quantity' ? 'selected' : '' }}>Quantity</option>
+                    <option value="place" {{ $sortBy == 'place' ? 'selected' : '' }}>Place</option>
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <select name="direction" class="form-select" onchange="this.form.submit()">
+                    <option value="asc" {{ $direction == 'asc' ? 'selected' : '' }}>Ascending</option>
+                    <option value="desc" {{ $direction == 'desc' ? 'selected' : '' }}>Descending</option>
+                </select>
+                
+            </div>
+        </div>
+    </form>
 
     @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
     @endif
+
+
 
     <div class="mb-3">
         <a href="{{ route('items.create') }}" class="btn btn-primary">Create New Item</a>
@@ -25,12 +55,17 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Name</th>
+                <th><a href="{{ route('items.index', ['sort_by' => 'item_id', 'direction' => $direction === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}">ID</a></th>
+                <th><a href="{{ route('items.index', ['sort_by' => 'name', 'direction' => $direction === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}">Name</a></th>
+
                 <th>Description</th>
-                <th>Quantity</th>
-                <th>Youth Movement</th>
+
+                <th><a href="{{ route('items.index', ['sort_by' => 'quantity', 'direction' => $direction === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}">Quantity</a></th>
+                <th><a href="{{ route('items.index', ['sort_by' => 'place', 'direction' => $direction === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}">Place</a></th>
+
+
                 <th>Actions</th>
+
             </tr>
         </thead>
         <tbody>
@@ -40,12 +75,14 @@
                     <td>{{ $item->name }}</td>
                     <td>{{ $item->description }}</td>
                     <td>{{ $item->quantity }}</td>
-                    <td>{{ $item->youth_movement }}</td>
+                    <td>{{ $item->place }}</td>
+
+
                     <td>
 
                         <a href="{{ route('items.show', $item->item_id) }}" class="btn btn-info btn-sm">View</a>
                         <a href="{{ route('items.edit', $item->item_id) }}" class="btn btn-warning btn-sm">Edit</a>
-                        
+
                         <form action="{{ route('items.destroy', $item->item_id) }}" method="POST" style="display:inline-block;">
                             @csrf
                             @method('DELETE')
@@ -62,6 +99,6 @@
     </table>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+@endauth
+
+@endsection

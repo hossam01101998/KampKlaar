@@ -12,10 +12,28 @@ class ReservationController extends Controller
 {
 
 
-    public function index()
+    public function index(Request $request)
     {
-        $reservations = Reservation::with(['user', 'item'])->get();
-        return view('reservations.index', compact('reservations'));
+
+        $search = $request->input('search'); // Término de búsqueda general
+        $sortBy = $request->input('sort_by', 'reservation_id'); // Ordenar por
+        $direction = $request->input('direction', 'asc'); // Dirección de ordenamiento (asc/desc)
+
+        $reservations = Reservation::with(['user', 'item'])
+        ->when($search, function ($query, $search) {
+            return $query->whereHas('user', function ($q) use ($search) {
+                $q->where('username', 'like', '%' . $search . '%');
+            })
+            ->orWhereHas('item', function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%');
+            })
+            ->orWhere('start_date', 'like', '%' . $search . '%')
+            ->orWhere('end_date', 'like', '%' . $search . '%');
+        })
+        ->orderBy($sortBy, $direction)
+        ->get();
+
+        return view('reservations.index', compact('reservations', 'search', 'sortBy', 'direction'));
     }
 
 
@@ -94,16 +112,22 @@ class ReservationController extends Controller
     }
 
 
-    public function update(Request $request, $id)
+public function update(Request $request, $id)
 {
+    $reservation = Reservation::findOrFail($id);
+
+    if ($reservation->status == false) {
+        return back()->withErrors(['status' => 'This reservation has been canceled and cannot be edited.']);
+    }
     $request->validate([
         'start_date' => 'required|date',
         'end_date' => 'required|date',
         'quantity' => 'required|integer|min:1',
         'status' => 'required|boolean',
+
     ]);
 
-    $reservation = Reservation::findOrFail($id);
+
     $item = Item::findOrFail($reservation->item_id);
 
 
@@ -130,6 +154,15 @@ class ReservationController extends Controller
         'quantity' => $request->quantity,
         'status' => $request->status,
     ]);
+
+    if (Auth::user()->role == 'admin') {
+        $validatedData['status'] = $request->input('status', $reservation->status);
+    } else {
+        $validatedData['status'] = $reservation->status;
+    }
+
+    $reservation->update($validatedData);
+
 
     return redirect()->route('reservations.index')->with('success', 'Reservation updated successfully.');
 }
