@@ -31,22 +31,34 @@ class UserProfileController extends Controller
         return redirect()->route('profile')->with('error', 'User not found');
     }
 
-    $request->validate([
-        'username' => 'required|string|max:100|unique:users,username,' . $user->user_id,
-        'email' => 'required|email|max:255|unique:users,email,' . $user->user_id,
-    ]);
+   // dd($user);
+
+   //dd($request->all());
+
+   $request->validate([
+    'username' => 'required|string|max:100|unique:users,username,' . $user->user_id . ',user_id',
+    'email' => 'required|email|max:255|unique:users,email,' . $user->user_id . ',user_id',
+    // for phone number we use regex.
+    'phone' => 'nullable|regex:/^\+?[0-9]{8,15}$/|max:15',
+    'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+    //'photo' => 'nullable|image,',
+
+]);
+
 
     $user->username = $request->input('username');
     $user->email = $request->input('email');
+    $user->phone = $request->input('phone') ?? null;
+    $user->photo = $request->file('photo') ?? null;
+
 
     $userSaved = $user->save();
 
-        if ($userSaved) {
-            return redirect()->route('profile')->with('success', 'Profile updated successfully.');
-        } else {
-            return redirect()->route('profile')->with('error', 'Failed to update profile.');
-        }
 
+if ($userSaved) {
     return redirect()->route('profile')->with('success', 'Profile updated successfully.');
+} else {
+    return redirect()->route('profile')->with('error', 'Failed to update profile.');
+}
 }
 }

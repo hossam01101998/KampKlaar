@@ -33,32 +33,33 @@
 
                     </ul>
 
-                    <div class="d-flex justify-content-center align-items-center gap-2">
-
+                    <div class="d-flex flex-wrap justify-content-center align-items-center gap-3 p-4 bg-light border rounded shadow-sm">
                         @auth
-                        <a href="{{ route('profile') }}" class="nav-link">Profile</a>
-
-                        <a href="{{ route('items.index') }}" class="btn btn-primary">
-                            <i class="bi bi-box"></i> View Items
+                            <a href="{{ route('items.index') }}" class="btn btn-outline-primary d-flex align-items-center gap-2">
+                                <i class="bi bi-box"></i>
+                                <span>View Items</span>
+                            </a>
+                            <a href="{{ route('reservations.index') }}" class="btn btn-outline-success d-flex align-items-center gap-2">
+                                <i class="bi bi-calendar-check"></i>
+                                <span>View Reservations</span>
+                            </a>
+                            <a href="{{ route('reservations.index') }}" class="btn btn-outline-danger d-flex align-items-center gap-2">
+                                <i class="bi bi-exclamation-triangle"></i>
+                                <span>View Damage Reports</span>
+                            </a>
+                            <a href="{{ route('profile') }}" class="btn btn-outline-info d-flex align-items-center gap-2">
+                                <i class="bi bi-person"></i>
+                                <span>My Profile</span>
+                            </a>
+                        @endauth
+                        <a href="{{ route('privacy-policy') }}" class="btn btn-outline-warning d-flex align-items-center gap-2">
+                            <i class="bi bi-gear"></i>
+                            <span>Privacy Policy</span>
                         </a>
-                        <a href="{{ route('reservations.index') }}" class="btn btn-success">
-                            <i class="bi bi-calendar-check"></i> View Reservations
-                        </a>
-                        <a href="{{ route('reservations.index') }}" class="btn btn-danger">
-                            <i class="bi bi-exclamation-triangle"></i> View Damage Reports
-                        </a>
-                        <a href="{{ route('reservations.index') }}" class="btn btn-info">
-                            <i class="bi bi-person"></i> My Profile
-                        </a>
-                        <a href="{{ route('reservations.index') }}" class="btn btn-warning">
-                            <i class="bi bi-gear"></i> Settings
-                        </a>
-
-                    @endauth
-
-                        <a href="{{ route('privacy-policy') }}" class="ml-2">Privacy Policy</a>
                     </div>
 
+
+                    
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
@@ -78,7 +79,7 @@
                         @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
+                                    {{ Auth::user()->username }}
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">

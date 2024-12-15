@@ -20,6 +20,9 @@ return new class extends Migration
             $table->string('email', 100)->unique()->nullable(false); // UNIQUE and NOT NULL
             $table->timestamp('email_verified_at')->nullable();
 
+            $table->string('phone', 15)->nullable();
+            $table->string('photo', 255)->nullable();
+
             $table->enum('role', ['admin', 'leader'])->default('leader');
             $table->string('youth_movement', 100)->nullable(false);
 

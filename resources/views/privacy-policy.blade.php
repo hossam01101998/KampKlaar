@@ -44,4 +44,36 @@
     <p>If you have any questions about this Privacy Policy or our data practices, please contact us at:</p>
     <p><strong>Email:</strong> support@kampklaar.com</p>
 </div>
+
+
+
+<div class="d-flex justify-content-center align-items-center gap-3">
+    @guest
+        @if (Route::has('login'))
+            <a class="btn btn-outline-primary btn-lg" href="{{ route('login') }}">
+                <i class="bi bi-box-arrow-in-right"></i> {{ __('Login') }}
+            </a>
+        @endif
+
+        @if (Route::has('register'))
+            <a class="btn btn-outline-success btn-lg" href="{{ route('register') }}">
+                <i class="bi bi-person-plus"></i> {{ __('Register') }}
+            </a>
+        @endif
+    @else
+        <a class="btn btn-outline-danger btn-lg" href="{{ route('logout') }}"
+            onclick="event.preventDefault();
+            document.getElementById('logout-form').submit();">
+            <i class="bi bi-box-arrow-right"></i> {{ __('Logout') }}
+        </a>
+
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+            @csrf
+        </form>
+    @endguest
+</div>
+
+
+
+
 @endsection

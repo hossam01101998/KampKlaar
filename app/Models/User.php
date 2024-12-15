@@ -34,6 +34,8 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
+        'phone',
+        'photo',
         'role',
         'youth_movement'
     ];
