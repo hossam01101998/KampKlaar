@@ -61,7 +61,7 @@
 
 
        <!-- only admin -->
-         @if(auth()->user()->role == 'admin')
+         @if(auth()->user()->isadmin)
 
        <div class="mb-3">
            <label for="status" class="form-label">Status</label>

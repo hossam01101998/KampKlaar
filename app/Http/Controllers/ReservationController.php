@@ -15,11 +15,25 @@ class ReservationController extends Controller
     public function index(Request $request)
     {
 
-        $search = $request->input('search'); // Término de búsqueda general
-        $sortBy = $request->input('sort_by', 'reservation_id'); // Ordenar por
-        $direction = $request->input('direction', 'asc'); // Dirección de ordenamiento (asc/desc)
+        $search = $request->input('search');
+        $sortBy = $request->input('sort_by', 'start_date');
+        $direction = $request->input('direction', 'asc');
 
-        $reservations = Reservation::with(['user', 'item'])
+
+        $query = Reservation::with(['user', 'item'])
+        ->when($search, function ($query, $search) {
+            return $query->whereHas('user', function ($q) use ($search) {
+                $q->where('username', 'like', '%' . $search . '%');
+            })
+            ->orWhereHas('item', function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%');
+            })
+            ->orWhere('start_date', 'like', '%' . $search . '%')
+            ->orWhere('end_date', 'like', '%' . $search . '%');
+        });
+
+
+      /*  $reservations = Reservation::with(['user', 'item'])
         ->when($search, function ($query, $search) {
             return $query->whereHas('user', function ($q) use ($search) {
                 $q->where('username', 'like', '%' . $search . '%');
@@ -30,8 +44,21 @@ class ReservationController extends Controller
             ->orWhere('start_date', 'like', '%' . $search . '%')
             ->orWhere('end_date', 'like', '%' . $search . '%');
         })
+       // ->orderBy('start_date', 'asc')
         ->orderBy($sortBy, $direction)
         ->get();
+*/
+if ($sortBy == 'username') {
+    $query->join('users', 'users.id', '=', 'reservations.user_id') // Join con la tabla 'users'
+          ->orderBy('users.username', $direction); // Ordenar por 'username'
+} else {
+    // Si no es por 'username', ordenar por el campo solicitado
+    $query->orderBy($sortBy, $direction);
+}
+
+// Ejecutar la consulta
+$reservations = $query->get();
+
 
         return view('reservations.index', compact('reservations', 'search', 'sortBy', 'direction'));
     }
@@ -81,6 +108,8 @@ class ReservationController extends Controller
         'quantity' => $request->quantity,
         'status' => true,  // by default it will be condirmed
         ]);
+
+        //dd($request->all());
 
 
         return redirect()->route('reservations.index')->with('success', 'Reservation created successfully.');

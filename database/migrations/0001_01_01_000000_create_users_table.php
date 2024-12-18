@@ -23,7 +23,11 @@ return new class extends Migration
             $table->string('phone', 15)->nullable();
             $table->string('photo', 255)->nullable();
 
-            $table->enum('role', ['admin', 'leader'])->default('leader');
+            //$table->enum('role', ['admin', 'leader'])->default('leader');
+            $table->boolean('isadmin')->default(false);
+
+            //by default the user is a leader
+
             $table->string('youth_movement', 100)->nullable(false);
 
             $table->rememberToken();

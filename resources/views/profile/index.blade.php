@@ -17,14 +17,12 @@
         <strong>Joined:</strong> {{ $user->created_at->format('d M Y') }}
     </div>
     <div class="mb-3">
-        <strong>Role:</strong> {{ $user->role }}
+        <strong>Role:</strong> {{ $user->isadmin ? 'Admin' : 'Leader' }}
     </div>
     <div class="mb-3">
         <strong>Youth Movement:</strong> {{ $user->youth_movement }}
     </div>
-    <div class="mb-3">
-        <strong>Photo:</strong> {{ $user->photo }}
-    </div>
+    
 
 
     <a href="{{ route('profile.edit') }}" class="btn btn-warning">Edit Profile</a>

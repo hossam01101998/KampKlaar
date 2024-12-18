@@ -47,7 +47,7 @@
             <tr>
 
                 <th><a href="{{ route('reservations.index', ['sort_by' => 'reservation_id', 'direction' => $direction === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}">ID</a></th>
-                <th><a href="{{ route('reservations.index', ['sort_by' => 'user_id', 'direction' => $direction === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}">User</a></th>
+                <th><a href="{{ route('reservations.index', ['sort_by' => 'username', 'direction' => $direction === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}">User</a></th>
                 <th><a href="{{ route('reservations.index', ['sort_by' => 'item_id', 'direction' => $direction === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}">Item</a></th>
                 <th><a href="{{ route('reservations.index', ['sort_by' => 'start_date', 'direction' => $direction === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}">Start Date</a></th>
                 <th><a href="{{ route('reservations.index', ['sort_by' => 'end_date', 'direction' => $direction === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}">End Date</a></th>

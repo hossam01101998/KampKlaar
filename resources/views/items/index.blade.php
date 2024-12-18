@@ -35,7 +35,7 @@
                     <option value="asc" {{ $direction == 'asc' ? 'selected' : '' }}>Ascending</option>
                     <option value="desc" {{ $direction == 'desc' ? 'selected' : '' }}>Descending</option>
                 </select>
-                
+
             </div>
         </div>
     </form>
@@ -63,20 +63,23 @@
                 <th><a href="{{ route('items.index', ['sort_by' => 'quantity', 'direction' => $direction === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}">Quantity</a></th>
                 <th><a href="{{ route('items.index', ['sort_by' => 'place', 'direction' => $direction === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}">Place</a></th>
 
-
+                @if (auth()->user()->isadmin)
                 <th>Actions</th>
+                @endif
 
             </tr>
         </thead>
         <tbody>
             @forelse ($items as $item)
-                <tr>
+            <tr onclick="window.location='{{ route('items.show', $item->item_id) }}'">
+
                     <td>{{ $item->item_id }}</td>
                     <td>{{ $item->name }}</td>
                     <td>{{ $item->description }}</td>
                     <td>{{ $item->quantity }}</td>
                     <td>{{ $item->place }}</td>
 
+                    @if (auth()->user()->isadmin)
 
                     <td>
 
@@ -86,9 +89,11 @@
                         <form action="{{ route('items.destroy', $item->item_id) }}" method="POST" style="display:inline-block;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this item?')">Delete</button>
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="event.stopPropagation(); return confirm('Are you sure you want to delete this item?')">Delete</button>
                         </form>
                     </td>
+
+                    @endif
                 </tr>
             @empty
                 <tr>
@@ -102,3 +107,5 @@
 @endauth
 
 @endsection
+
+

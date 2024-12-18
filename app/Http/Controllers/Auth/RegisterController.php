@@ -7,6 +7,8 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class RegisterController extends Controller
 {
@@ -53,8 +55,8 @@ class RegisterController extends Controller
             'email' => ['required', 'string', 'email', 'max:100', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'youth_movement' => ['required', 'string', 'max:100'],
-            'role' => ['required', 'in:admin,leader'],
-            
+            'isadmin' => ['required', 'boolean'],
+
 
         ]);
     }
@@ -72,7 +74,14 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'youth_movement' => $data['youth_movement'],
-            'role' => $data['role'],
+            'isadmin' => $data['isadmin'],
         ]);
+    }
+
+    protected function registered(Request $request, $user)
+    {
+        Session::flash('welcome_message', 'You have been correctly registered! Welcome ' . $user->username . '!');
+
+        return redirect($this->redirectTo);
     }
 }

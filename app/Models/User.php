@@ -21,7 +21,7 @@ class User extends Authenticatable
 
     {
 
-        return $this->role === 'admin';
+        return $this->role === true;
 
     }
 
@@ -36,7 +36,7 @@ class User extends Authenticatable
         'password',
         'phone',
         'photo',
-        'role',
+        'isadmin',
         'youth_movement'
     ];
 

@@ -3,6 +3,11 @@
 @section('content')
 
 <div class="container mt-5">
+
+    @auth
+
+@if (auth()->user()->isadmin)
+
     <h2>Create new article</h2>
 
 
@@ -50,7 +55,38 @@
 
         <button type="submit" class="btn btn-primary">Create</button>
     </form>
+
+    @else
+<div class="alert alert-danger text-center">
+    <h4 class="alert-heading">Access Restricted</h4>
+    <p>You need to be an admin to create an article.</p>
+
+
+
 </div>
 
+@endif
+
+    @else
+<div class="alert alert-danger text-center">
+    <h4 class="alert-heading">Access Restricted</h4>
+    <p>You need to be logged in to create a new article.</p>
+    <hr>
+
+    <div class="d-flex justify-content-center gap-3 mt-3">
+        <a href="{{ route('login') }}" class="btn btn-primary">
+            <i class="bi bi-box-arrow-in-right"></i> Login
+        </a>
+
+        <a href="{{ route('register') }}" class="btn btn-success">
+            <i class="bi bi-person-plus"></i> Register
+        </a>
+
+    </div>
+
+</div>
+
+
+@endauth
 
 @endsection

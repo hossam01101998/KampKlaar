@@ -7,45 +7,46 @@ use Illuminate\Support\Facades\DB;
 use Faker\Factory as Faker;
 
 use App\Models\User;
+use App\Models\Item;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-class UsersSeeder extends Seeder
+class UserSeeder extends Seeder
 {
     /**
      * Seed the application's database.
      */
+
+
     public function run(): void
     {
-        DB::table('users')->insert([
+        /*DB::table('users')->insert([
             'username' => 'admin',
             'password' => 'password123',
             'email' => 'admin@example.com',
             'role' => 'admin',
             'youth_movement' => 'Scouts Halle',
-        ]);
+        ]);*/
 
 
 
-        User::create([
-            'user_id' => '1',
-            'username' => 'hossam1723',
+       User::create([
+            'username' => 'hossam12',
             'youth_movement' => 'Group 1',
             'email' => 'hossam@gmail.com',
             'password' => '11111111',
-            'role' => 'admin',
+            'isadmin' => true,
         ]);
 
 
 
         $faker = Faker::create();
         for ($i = 0; $i < 10; $i++) {
-            DB::table('users')->insert([
+            User::create([
                 'username' => $faker->userName,
                 'email' => $faker->unique()->email,
                 'password' => 'password123',
-                'role' => 'leader',
-                'phone' => $faker->phoneNumber,
-                'youth_movement' => 'Group 1',]);
+                'isadmin' => false,
+                'youth_movement' => 'Group 1']);
 
 
         }

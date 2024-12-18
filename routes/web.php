@@ -13,7 +13,7 @@ use App\Http\Controllers\UserProfileController;
 
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('privacy-policy');
 });
 
 
@@ -27,14 +27,14 @@ Route::middleware(['auth', 'admin'])->group(function () {
 });
 
 
-Route::get('/users', [UserController::class, 'index']);
-Route::get('/users/{user_id}', [UserController::class, 'show']);
+//Route::get('/users', [UserController::class, 'index']);
+//Route::get('/users/{user_id}', [UserController::class, 'show']);
 
 
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::resource('users', UserController::class);
+//Route::resource('users', UserController::class);
 Route::resource('items', ItemController::class);
 Route::resource('reservations', ReservationController::class);
 Route::resource('damage-reports', DamageReportController::class);
@@ -61,6 +61,12 @@ Route::get('/profile', [UserProfileController::class, 'show'])->name('profile')-
 Route::get('/profile/edit', [UserProfileController::class, 'edit'])->name('profile.edit')->middleware('auth');
 Route::post('/profile/edit', [UserProfileController::class, 'update'])->name('profile.update')->middleware('auth');
 Route::put('/profile', [UserProfileController::class, 'update'])->name('profile.update')->middleware('auth');
+
+
+
+Route::post('/make-admin/{user_id}', [AdminController::class, 'makeAdmin'])->name('admin.make');
+Route::post('/admin/remove/{user_id}', [AdminController::class, 'removeAdmin'])->name('admin.remove');
+Route::delete('/admin/delete/{user_id}', [AdminController::class, 'deleteUser'])->name('admin.delete');
 
 
 

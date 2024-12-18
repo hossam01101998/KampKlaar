@@ -3,7 +3,14 @@
 @section('content')
 
 <div class="container mt-5">
+
+    @auth
+
+    @if (auth()->user()->isadmin)
+
     <h2>Edit Article</h2>
+
+
 
     @if(session('success'))
         <div class="alert alert-success">
@@ -50,5 +57,20 @@
         <button type="submit" class="btn btn-primary">Update</button>
     </form>
 </div>
+
+@else
+<div class="alert alert-danger text-center">
+    <h4 class="alert-heading">Access Restricted</h4>
+    <p>You need to be an admin to edit an article.</p>
+
+
+
+
+</div>
+
+@endif
+
+
+@endauth
 
 @endsection

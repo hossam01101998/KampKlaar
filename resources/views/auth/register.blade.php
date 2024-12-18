@@ -41,13 +41,13 @@
 
                          <!-- Role -->
                          <div class="row mb-3">
-                            <label for="role" class="col-md-4 col-form-label text-md-end">Role</label>
+                            <label for="isadmin" class="col-md-4 col-form-label text-md-end">Role</label>
                             <div class="col-md-6">
-                                <select id="role" class="form-control @error('role') is-invalid @enderror" name="role" required>
-                                    <option value="leader">Leader</option>
-                                    <option value="admin">Admin</option>
+                                <select id="isadmin" class="form-control @error('role') is-invalid @enderror" name="isadmin" required>
+                                    <option value="0">Leader</option>
+                                    <option value="1">Admin</option>
                                 </select>
-                                @error('role')
+                                @error('isadmin')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
