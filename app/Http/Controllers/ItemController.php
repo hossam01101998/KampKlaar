@@ -13,7 +13,7 @@ class ItemController extends Controller
     public function index(Request $request)
     {
 
-
+        $youthMovement = auth()->user()->youth_movement;
 
         // search bar
         $search = $request->input('search');
@@ -28,7 +28,8 @@ class ItemController extends Controller
             return $query->where('name', 'LIKE', '%' . $search . '%')
                          ->orWhere('description', 'LIKE', '%' . $search . '%')
                          ->orWhere('place', 'LIKE', '%' . $search . '%');
-        })->orderBy($sortBy, $direction)->get();
+        })->orderBy($sortBy, $direction)
+        ->where('youth_movement', $youthMovement)->get();
 
 
         return view('items.index', compact('items', 'user', 'search', 'sortBy', 'direction'));
@@ -90,8 +91,17 @@ class ItemController extends Controller
 
     public function show($id)
     {
+        $youthMovement = auth()->user()->youth_movement;
 
-        $item = Item::where('item_id', $id)->firstOrFail();
+        $item = Item::where('item_id', $id)
+        ->where('youth_movement', $youthMovement)
+        ->firstOrFail();
+
+        if (!$item) {
+            return redirect()->route('items.index')->with('error', 'Item not found');
+        }
+
+
         return view('items.show', compact('item'));
     }
 

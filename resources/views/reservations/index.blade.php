@@ -39,6 +39,15 @@
                     <option value="desc" {{ $direction == 'desc' ? 'selected' : '' }}>Descending</option>
                 </select>
             </div>
+
+
+            <div class="col-md-4">
+                <select name="status" class="form-control" onchange="this.form.submit()">
+                    <option value="all" {{ $status === 'all' ? 'selected' : '' }}>All</option>
+                    <option value="1" {{ $status === '1' ? 'selected' : '' }}>Confirmed</option>
+                    <option value="0" {{ $status === '0' ? 'selected' : '' }}>Cancelled</option>
+                </select>
+            </div>
         </div>
     </form>
 
@@ -48,11 +57,11 @@
 
                 <th><a href="{{ route('reservations.index', ['sort_by' => 'reservation_id', 'direction' => $direction === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}">ID</a></th>
                 <th><a href="{{ route('reservations.index', ['sort_by' => 'username', 'direction' => $direction === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}">User</a></th>
-                <th><a href="{{ route('reservations.index', ['sort_by' => 'item_id', 'direction' => $direction === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}">Item</a></th>
+                <th><a href="{{ route('reservations.index', ['sort_by' => 'item_name', 'direction' => $direction === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}">Item</a></th>
                 <th><a href="{{ route('reservations.index', ['sort_by' => 'start_date', 'direction' => $direction === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}">Start Date</a></th>
                 <th><a href="{{ route('reservations.index', ['sort_by' => 'end_date', 'direction' => $direction === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}">End Date</a></th>
                 <th><a href="{{ route('reservations.index', ['sort_by' => 'quantity', 'direction' => $direction === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}">Quantity</a></th>
-                <th><a href="{{ route('reservations.index', ['sort_by' => 'status', 'direction' => $direction === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}">Status</a></th>
+                <th>Status</th>
 
                 <th>Actions</th>
 
@@ -71,7 +80,13 @@
 
 
 
-                    <td>{{ $reservation->status ? 'Confirmed' : 'Cancelled' }}</td>
+                    <td>
+                        @if ($reservation->status)
+                            <span class="badge bg-success">Confirmed</span>
+                        @else
+                            <span class="badge bg-danger">Cancelled</span>
+                        @endif
+                    </td>
 
 
                     <td>

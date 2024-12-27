@@ -35,6 +35,13 @@
 
                     <div class="d-flex flex-wrap justify-content-center align-items-center gap-3 p-4 bg-light border rounded shadow-sm">
                         @auth
+
+                            <a href="{{ route('home') }}" class="btn btn-outline-secondary d-flex align-items-center gap-2">
+                                <i class="bi bi-house-door"></i>
+                                <span>My Youth Movement</span>
+                            </a>
+
+
                             <a href="{{ route('items.index') }}" class="btn btn-outline-primary d-flex align-items-center gap-2">
                                 <i class="bi bi-box"></i>
                                 <span>View Items</span>
@@ -43,7 +50,7 @@
                                 <i class="bi bi-calendar-check"></i>
                                 <span>View Reservations</span>
                             </a>
-                            <a href="{{ route('reservations.index') }}" class="btn btn-outline-danger d-flex align-items-center gap-2">
+                            <a href="{{ route('damage_reports.index') }}" class="btn btn-outline-danger d-flex align-items-center gap-2">
                                 <i class="bi bi-exclamation-triangle"></i>
                                 <span>View Damage Reports</span>
                             </a>
@@ -59,7 +66,7 @@
                     </div>
 
 
-                    
+
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">

@@ -6,9 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class DamageReport extends Model
 {
+
+    protected $primaryKey = 'report_id';
+    
+    protected $table = 'damage_reports';
+
+    public $timestamps = false;
+
+
     protected $fillable = [
+    'user_id',
     'item_id',
     'description'];
+
 
     public function user()
     {

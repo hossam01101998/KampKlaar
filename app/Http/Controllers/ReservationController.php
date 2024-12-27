@@ -12,17 +12,23 @@ class ReservationController extends Controller
 {
 
 
-    public function index(Request $request)
+   public function index(Request $request)
     {
+        $youthMovement = auth()->user()->youth_movement;
 
         $search = $request->input('search');
         $sortBy = $request->input('sort_by', 'start_date');
         $direction = $request->input('direction', 'asc');
+        $status = $request->input('status', 'all');
 
+        $query = Reservation::query();
 
-        $query = Reservation::with(['user', 'item'])
-        ->when($search, function ($query, $search) {
-            return $query->whereHas('user', function ($q) use ($search) {
+        if ($status !== 'all') {
+            $query->where('status', $status);
+        }
+
+        if ($search) {
+            $query->whereHas('user', function ($q) use ($search) {
                 $q->where('username', 'like', '%' . $search . '%');
             })
             ->orWhereHas('item', function ($q) use ($search) {
@@ -30,37 +36,26 @@ class ReservationController extends Controller
             })
             ->orWhere('start_date', 'like', '%' . $search . '%')
             ->orWhere('end_date', 'like', '%' . $search . '%');
-        });
+        }
 
+        if ($sortBy === 'username') {
+            $query->join('users', 'users.user_id', '=', 'reservations.user_id')
+                ->orderBy('users.username', $direction)
+                ->select('reservations.*');
+        } elseif ($sortBy === 'item_name') {
+            $query->join('inventory', 'inventory.item_id', '=', 'reservations.item_id')
+                ->orderBy('inventory.name', $direction)
+                ->select('reservations.*');
 
-      /*  $reservations = Reservation::with(['user', 'item'])
-        ->when($search, function ($query, $search) {
-            return $query->whereHas('user', function ($q) use ($search) {
-                $q->where('username', 'like', '%' . $search . '%');
-            })
-            ->orWhereHas('item', function ($q) use ($search) {
-                $q->where('name', 'like', '%' . $search . '%');
-            })
-            ->orWhere('start_date', 'like', '%' . $search . '%')
-            ->orWhere('end_date', 'like', '%' . $search . '%');
-        })
-       // ->orderBy('start_date', 'asc')
-        ->orderBy($sortBy, $direction)
+        } else {
+            $query->orderBy($sortBy, $direction);
+        }
+
+        $reservations = $query->with(['user', 'item'])->
+        where('youth_movement', $youthMovement)
         ->get();
-*/
-if ($sortBy == 'username') {
-    $query->join('users', 'users.id', '=', 'reservations.user_id') // Join con la tabla 'users'
-          ->orderBy('users.username', $direction); // Ordenar por 'username'
-} else {
-    // Si no es por 'username', ordenar por el campo solicitado
-    $query->orderBy($sortBy, $direction);
-}
 
-// Ejecutar la consulta
-$reservations = $query->get();
-
-
-        return view('reservations.index', compact('reservations', 'search', 'sortBy', 'direction'));
+        return view('reservations.index', compact('reservations', 'search', 'sortBy', 'direction', 'status'));
     }
 
 
@@ -117,7 +112,15 @@ $reservations = $query->get();
 
     public function show($id)
     {
-        $reservation = Reservation::with(['user', 'item'])->where('reservation_id', $id)->firstOrFail();
+        $youthMovement = auth()->user()->youth_movement;
+
+        $reservation = Reservation::with(['user', 'item'])->where('reservation_id', $id)
+        ->where('youth_movement', $youthMovement)->firstOrFail();
+
+        if (!$reservation) {
+            return redirect()->route('reservations.index')->with('error', 'Reservation not found');
+        }
+
         return view('reservations.show', compact('reservation'));
     }
 

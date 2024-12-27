@@ -13,7 +13,7 @@ class AdminMiddleware
     {
 
         if (Auth::check() && Auth::user()->role == 'admin') {
-            return $next($request); // Continuar con la solicitud
+            return $next($request);
         }
         return redirect('/');
     }
