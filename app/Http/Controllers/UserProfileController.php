@@ -13,11 +13,14 @@ class UserProfileController extends Controller
 
     public function show()
     {
+
         if (!Auth::check()) {
             return redirect()->route('login');
         }
         $user = Auth::user();
         $reservations = $user->reservations()->orderBy('created_at', 'desc')->get();
+
+       // dd($user->photo);
 
         //dd($reservations);
 
@@ -38,7 +41,10 @@ class UserProfileController extends Controller
         if (!Auth::check()) {
             return redirect()->route('login');
         }
-        
+
+   //dd($request);
+
+
     $user = Auth::user();
 
     if (!$user) {
@@ -47,14 +53,23 @@ class UserProfileController extends Controller
 
    // dd($user);
 
-   //dd($request->all());
+
+    if ($request->hasFile('photo')) {
+        $photo = $request->file('photo');
+        $photoName = time() . '.' . $photo->getClientOriginalExtension();
+        $photo->move(public_path('images/profile_photos'), $photoName);
+        $user->photo = 'images/profile_photos/' . $photoName;
+    }
+
+
+
 
    $request->validate([
     'username' => 'required|string|max:100|unique:users,username,' . $user->user_id . ',user_id',
     'email' => 'required|email|max:255|unique:users,email,' . $user->user_id . ',user_id',
     // for phone number we use regex.
     'phone' => 'nullable|regex:/^\+?[0-9]{8,15}$/|max:15|unique:users,phone,' . $user->user_id . ',user_id',
-    'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+    //'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
     //'photo' => 'nullable|image,',
 
 ]);
@@ -63,7 +78,7 @@ class UserProfileController extends Controller
     $user->username = $request->input('username');
     $user->email = $request->input('email');
     $user->phone = $request->input('phone') ?? null;
-    $user->photo = $request->file('photo') ?? null;
+
 
 
     $userSaved = $user->save();

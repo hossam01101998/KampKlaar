@@ -11,7 +11,15 @@
         <div class="card-body">
 
             <div class="mb-4">
-                <img src="https://images.vexels.com/content/137047/preview/user-profile-blue-icon-32113c.png" alt="User Profile Image" class="img-fluid" style="max-width: 250px;">
+
+                @if($user->photo)
+
+                 <img src="{{ asset($user->photo) }}" alt="User Profile Image" class="img-fluid" style="max-width: 350px; max-height:500px; object-fit: cover; border-radius: 10px;">
+
+                @else
+                <img src="https://images.vexels.com/content/137047/preview/user-profile-blue-icon-32113c.png" alt="User Profile Image" class="img-fluid" style="max-width: 350px;">
+                
+                @endif
             </div>
 
             <div class="mb-3">
@@ -34,6 +42,8 @@
             </div>
 
         <a href="{{ route('profile.edit') }}" class="btn btn-warning">Edit Profile</a>
+
+
     </div>
 
 </div>
