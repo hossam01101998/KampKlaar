@@ -56,6 +56,7 @@ class RegisterController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'youth_movement' => ['required', 'string', 'max:100'],
             'isadmin' => ['required', 'boolean'],
+            'phone' => ['nullable', 'regex:/^\+?[0-9]{8,15}$/', 'max:15', 'unique:users'],
 
 
         ]);
@@ -75,6 +76,7 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
             'youth_movement' => $data['youth_movement'],
             'isadmin' => $data['isadmin'],
+            'phone' => $data['phone'],
         ]);
     }
 

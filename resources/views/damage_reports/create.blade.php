@@ -1,18 +1,30 @@
 @extends('layouts.app')
 
 @section('content')
+
 <div class="container mt-5">
     <h2>Create Damage Report</h2>
+
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
 
     <form action="{{ route('damage_reports.store') }}" method="POST">
         @csrf
         <div class="form-group">
             <label for="item_id">Item</label>
-            <select name="item_id" id="item_id" class="form-control">
+            <input list="items" name="item_id" id="item_id" class="form-control">
+            <datalist id="items">
                 @foreach($items as $item)
                     <option value="{{ $item->item_id }}">{{ $item->name }}</option>
                 @endforeach
-            </select>
+            </datalist>
         </div>
 
         <div class="form-group">
@@ -25,4 +37,7 @@
 
     <a href="{{ route('damage_reports.index') }}" class="btn btn-secondary mt-3">Back to List</a>
 </div>
+
+
+
 @endsection

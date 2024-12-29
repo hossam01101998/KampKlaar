@@ -37,12 +37,19 @@ class ItemController extends Controller
 
     public function create ()
     {
+        if (!auth()->user()->isadmin) {
+            return redirect()->route('home')->with('error', 'You do not have permission to access this page.');
+        }
+
         return view('items.create');
     }
 
     public function store(Request $request)
     {
 
+        if (!auth()->user()->isadmin) {
+            return redirect()->route('home')->with('error', 'You do not have permission to create an item.');
+        }
         $request->validate([
             'name' => 'required|string|min:3|max:255',
             'description' => 'nullable|min:10|string',
@@ -69,12 +76,21 @@ class ItemController extends Controller
 
     public function edit($id)
     {
+        if (!auth()->user()->isadmin) {
+            return redirect()->route('home')->with('error', 'You do not have permission to access this page.');
+        }
+
         $item = Item::where('item_id', $id)->firstOrFail();
         return view('items.edit', compact('item'));
     }
 
     public function update(Request $request, $id)
     {
+
+        if (!auth()->user()->isadmin) {
+            return redirect()->route('home')->with('error', 'You do not have permission to update an item.');
+        }
+
         $request->validate([
             'name' => 'required|string|min:3|max:255',
             'description' => 'nullable|min:10|string',
@@ -107,6 +123,10 @@ class ItemController extends Controller
 
     public function destroy($id)
     {
+
+        if (!auth()->user()->isadmin) {
+            return redirect()->route('home')->with('error', 'You do not have permission to delete an item.');
+        }
 
         $item = Item::where('item_id', $id)->firstOrFail();
         $item->delete();

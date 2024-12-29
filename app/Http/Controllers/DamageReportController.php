@@ -10,32 +10,60 @@ class DamageReportController extends Controller
 {
     public function index()
     {
-        $damageReports = DamageReport::with(['user', 'item'])->get();
+        $userYouthMovement = auth()->user()->youth_movement;
+
+        $items = Item::where('youth_movement', $userYouthMovement)->pluck('item_id');
+
+        $damageReports = DamageReport::whereIn('item_id', $items)
+        ->with(['item', 'user'])
+        ->get();
+
+
         return view('damage_reports.index', compact('damageReports'));
     }
 
     public function show($id)
     {
-       // $damageReport = DamageReport::with(['user', 'item'])->findOrFail($id);
-       $damageReport = DamageReport::findOrFail($id);
-        //dd($damageReport);
+        $damageReport = DamageReport::with(['user', 'item'])->findOrFail($id);
+
+        $userYouthMovement = auth()->user()->youth_movement;
+
+    if ($damageReport->item->youth_movement !== $userYouthMovement) {
+        abort(403, 'You are not authorized to view this damage report.');
+    }
+
         return view('damage_reports.show', compact('damageReport'));
     }
 
     public function create()
     {
-        $items = Item::all();
+
+        $userYouthMovement = auth()->user()->youth_movement;
+
+        $items = Item::where('youth_movement', $userYouthMovement)->get();
         return view('damage_reports.create', compact('items'));
     }
 
     public function store(Request $request)
     {
+
+        $userYouthMovement = auth()->user()->youth_movement;
+
         $request->validate([
             'description' => 'required',
             'item_id' => 'required|exists:inventory,item_id',
         ]);
+                $item = Item::find($request->input('item_id'));
 
-        // Create the damage report
+                if (!$item) {
+                    return back()->withErrors(['item_id' => 'The selected item does not exist.']);
+                }
+                if ($item->youth_movement !== $userYouthMovement) {
+                    return back()->withErrors(['item_id' => 'The selected item does not belong to your youth movement.']);
+                }
+
+
+
         DamageReport::create([
             'user_id' => auth()->user()->user_id,
             'item_id' => $request->input('item_id'),
@@ -71,8 +99,14 @@ class DamageReportController extends Controller
     public function destroy($id)
     {
         $damageReport = DamageReport::findOrFail($id);
+
+        if (auth()->user()->isadmin || auth()->user()->id === $damageReport->user_id) {
         $damageReport->delete();
 
         return redirect()->route('damage_reports.index')->with('success', 'Damage report deleted successfully!');
+        }
+
+        return redirect()->route('damage_reports.index')->with('error', 'You do not have permission to delete this damage report.');
+
     }
 }

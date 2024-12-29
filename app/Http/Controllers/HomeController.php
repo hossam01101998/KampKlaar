@@ -24,7 +24,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $users = User::all();
+        $userYouthMovement = auth()->user()->youth_movement;
+
+        $users = User::where('youth_movement', $userYouthMovement)->get();
+
         return view('home', compact('users'));
     }
 

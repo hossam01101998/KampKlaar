@@ -4,6 +4,13 @@
 
     @auth
 
+    <style>
+    .low-quantity-row {
+        background-color: #f8d7da;
+        color: #842029;
+    }
+    </style>
+
 
 <div class="container mt-5">
     <h2>Items List of "{{ $user->youth_movement }}":</h2>
@@ -40,6 +47,12 @@
         </div>
     </form>
 
+    @if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+    @endif
+
     @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
@@ -47,10 +60,11 @@
     @endif
 
 
-
+@if(auth()->user()->isadmin)
     <div class="mb-3">
         <a href="{{ route('items.create') }}" class="btn btn-primary">Create New Item</a>
     </div>
+@endif
 
     <table class="table table-striped">
         <thead>
@@ -67,16 +81,27 @@
                 <th>Actions</th>
                 @endif
 
+                @if(!auth()->user()->isadmin)
+                <th>View</th>
+                @endif
+
             </tr>
         </thead>
         <tbody>
             @forelse ($items as $item)
+
             <tr onclick="window.location='{{ route('items.show', $item->item_id) }}'">
 
                     <td>{{ $item->item_id }}</td>
                     <td>{{ $item->name }}</td>
                     <td>{{ $item->description }}</td>
-                    <td>{{ $item->quantity }}</td>
+                    <td>
+                        @if ($item->quantity == 0)
+                        <span class="text-danger">Not Available</span>
+                        @else
+                        {{ $item->quantity }}
+                        @endif
+                    </td>
                     <td>{{ $item->place }}</td>
 
                     @if (auth()->user()->isadmin)
@@ -94,6 +119,14 @@
                     </td>
 
                     @endif
+
+                    @if (!auth()->user()->isadmin)
+                    <td>
+
+                        <a href="{{ route('items.show', $item->item_id) }}" class="btn btn-info btn-sm">View</a>
+                    </td>
+                    @endif
+
                 </tr>
             @empty
                 <tr>

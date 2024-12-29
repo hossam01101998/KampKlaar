@@ -8,6 +8,13 @@
                 <div class="card-header"><h1>{{ Auth::user()->youth_movement }}</h1></div>
 
                 <div class="card-body">
+
+                    @if(session('error'))
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+                    
                     @if (session('status'))
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}

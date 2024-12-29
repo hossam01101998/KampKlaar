@@ -4,6 +4,16 @@
 
 <div class="container mt-5">
     <h2>Item Details</h2>
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
 
     @if(session('success'))
         <div class="alert alert-success">
@@ -26,12 +36,14 @@
         </div>
         <div class="card-footer">
             <a href="{{ route('items.index') }}" class="btn btn-secondary">Back to List</a>
+            @if(auth()->user()->isadmin)
             <a href="{{ route('items.edit', $item->item_id) }}" class="btn btn-warning">Edit</a>
             <form action="{{ route('items.destroy', $item->item_id) }}" method="POST" style="display:inline;">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="btn btn-danger">Delete</button>
             </form>
+            @endif
         </div>
 
 
@@ -43,7 +55,8 @@
 @auth
 
 @if ($item->quantity > 0)
-        <form action="{{ route('reservations.store') }}" method="POST">
+<div class="card" style="margin: 2%">
+        <form action="{{ route('reservations.store') }}" method="POST" style="padding: 2%">
             @csrf
             <input type="hidden" name="user_id" value="{{ auth()->user()->user_id }}">
             <input type="hidden" name="item_id" value="{{ $item->item_id }}">
@@ -76,8 +89,10 @@
 
             <button type="submit" class="btn btn-primary">Reserve</button>
         </form>
+    </div>
         @else
-    <p class="text-danger">Sorry, this item is out of stock.</p>
+    <h3 class="text-danger" style="margin: 1%">
+        Sorry, this item is out of stock.</h3>
 @endif
 
     @else

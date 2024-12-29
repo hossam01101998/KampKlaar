@@ -4,6 +4,12 @@
 <div class="container mt-5">
     <h2>Reservations List</h2>
 
+    @if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+    @endif
+
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
 
@@ -63,14 +69,21 @@
                 <th><a href="{{ route('reservations.index', ['sort_by' => 'quantity', 'direction' => $direction === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}">Quantity</a></th>
                 <th>Status</th>
 
+                @if (auth()->user()->isadmin)
                 <th>Actions</th>
+                @endif
+                @if (!auth()->user()->isadmin)
+                <th>View</th>
+                @endif
 
             </tr>
         </thead>
         <tbody>
 
             @forelse($reservations as $reservation)
-                <tr>
+
+                <tr onclick="window.location='{{ route('reservations.show', $reservation->reservation_id) }}'">
+
                     <td>{{ $reservation->reservation_id }}</td>
                     <td>{{ $reservation->user->username }}</td>
                     <td>{{ $reservation->item->name }}</td>
@@ -91,17 +104,19 @@
 
                     <td>
                         <a href="{{ route('reservations.show', $reservation->reservation_id) }}" class="btn btn-info btn-sm">View</a>
-                        @if ($reservation->status)
-                        <a href="{{ route('reservations.edit', $reservation->reservation_id) }}" class="btn btn-warning btn-sm">Edit</a>
+                        @if(auth()->user()->isadmin)
+                            @if ($reservation->status)
+                            <a href="{{ route('reservations.edit', $reservation->reservation_id) }}" class="btn btn-warning btn-sm">Edit</a>
 
 
-                        @endif
-
+                            @endif
                         <form action="{{ route('reservations.destroy', $reservation->reservation_id) }}" method="POST" class="d-inline">
                             @csrf
                             @method('DELETE')
                             <button class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
                         </form>
+                        @endif
+
                     </td>
                 </tr>
             @empty

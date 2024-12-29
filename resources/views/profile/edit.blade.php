@@ -18,12 +18,7 @@
             <input type="email" name="email" class="form-control" value="{{ old('email', $user->email) }}" required>
         </div>
 
-        <div class="mb-3">
-            <label for="youth_movement" class="form-label">Youth Movement</label>
-            <input type="text" name="youth_movement" class="form-control" value="{{ old('youth_movement', $user->youth_movement) }}" required>
-        </div>
-
-
+        
 
         <div class="mb-3">
             <label for="phone" class="form-label">Phone Number</label>

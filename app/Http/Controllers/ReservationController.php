@@ -23,6 +23,14 @@ class ReservationController extends Controller
 
         $query = Reservation::query();
 
+        $query->whereHas('user', function ($q) use ($youthMovement) {
+            $q->where('youth_movement', $youthMovement);
+        });
+
+        $query->whereHas('item', function ($q) use ($youthMovement) {
+            $q->where('youth_movement', $youthMovement);
+        });
+
         if ($status !== 'all') {
             $query->where('status', $status);
         }
@@ -51,9 +59,8 @@ class ReservationController extends Controller
             $query->orderBy($sortBy, $direction);
         }
 
-        $reservations = $query->with(['user', 'item'])->
-        where('youth_movement', $youthMovement)
-        ->get();
+
+        $reservations = $query->with(['user', 'item'])->get();
 
         return view('reservations.index', compact('reservations', 'search', 'sortBy', 'direction', 'status'));
     }
@@ -73,16 +80,20 @@ class ReservationController extends Controller
 
     public function store(Request $request)
 {
+    if (!Auth::check()) {
+        return redirect()->route('login')->with('error', 'You must be logged in to make a reservation.');
+    }
+
     $request->validate([
 
         'start_date' => 'required|date|before_or_equal:end_date',
-        'end_date' => 'required|date|after:start_date',
+        'end_date' => 'required|date|after_or_equal:start_date',
         'quantity' => 'required|integer|min:1',
         'item_id' => 'required|exists:inventory,item_id'
 
     ], [
         'start_date.before_or_equal' => 'The start date must be before or equal to the end date.',
-        'end_date.after' => 'The end date must be after the start date.',
+        'end_date.after_or_equal' => 'The end date must be the same day or after the start date.',
     ]);
 
     $item = Item::findOrFail($request->item_id);
@@ -95,8 +106,12 @@ class ReservationController extends Controller
 
     $item->decrement('quantity', $request->quantity);
 
+    if ($item->youth_movement !== auth()->user()->youth_movement) {
+        return redirect()->back()->withErrors('You cannot reserve an item from another youth movement.');
+    }
+
     Reservation::create([
-        'user_id' => $request->user_id,
+        'user_id' => Auth::id(),
         'item_id' => $request->item_id,
         'start_date' => $request->start_date,
         'end_date' => $request->end_date,
@@ -112,10 +127,22 @@ class ReservationController extends Controller
 
     public function show($id)
     {
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'You must be logged in to view a reservation.');
+        }
+
         $youthMovement = auth()->user()->youth_movement;
 
         $reservation = Reservation::with(['user', 'item'])->where('reservation_id', $id)
-        ->where('youth_movement', $youthMovement)->firstOrFail();
+        ->whereHas('user', function($query) use ($youthMovement) {
+            $query->where('youth_movement', $youthMovement);
+        })
+        ->whereHas('item', function ($query) use ($youthMovement) {
+            $query->where('youth_movement', $youthMovement);
+        })
+        ->firstOrFail();
+
+
 
         if (!$reservation) {
             return redirect()->route('reservations.index')->with('error', 'Reservation not found');
@@ -136,10 +163,17 @@ class ReservationController extends Controller
 
     public function edit($id)
     {
+
         $reservation = Reservation::findOrFail($id);
 
         $item = Item::findOrFail($reservation->item_id);
 
+
+        if (($item->youth_movement !== auth()->user()->youth_movement ||
+        $reservation->user->youth_movement !== auth()->user()->youth_movement) &&
+        !auth()->user()->isadmin) {
+        return redirect()->route('reservations.index')->with('error', 'You do not have permission to edit this reservation.');
+    }
         return view('reservations.edit', compact('reservation', 'item'));
     }
 
@@ -147,6 +181,15 @@ class ReservationController extends Controller
 public function update(Request $request, $id)
 {
     $reservation = Reservation::findOrFail($id);
+    $item = Item::findOrFail($reservation->item_id);
+
+
+    if (($item->youth_movement !== auth()->user()->youth_movement ||
+        $reservation->user->youth_movement !== auth()->user()->youth_movement) &&
+        !auth()->user()->isadmin) {
+
+        return redirect()->route('reservations.index')->with('error', 'You do not have permission to edit this reservation.');
+    }
 
     if ($reservation->status == false) {
         return back()->withErrors(['status' => 'This reservation has been canceled and cannot be edited.']);
@@ -203,6 +246,11 @@ public function update(Request $request, $id)
     public function destroy($id)
     {
         $reservation = Reservation::where('reservation_id', $id)->firstOrFail();
+
+
+        if (auth()->user()->user_id !== $reservation->user_id && !auth()->user()->isadmin) {
+            return redirect()->route('reservations.index')->with('error', 'You do not have permission to delete this reservation.');
+        }
 
         $item = Item::findOrFail($reservation->item_id);
 
