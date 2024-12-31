@@ -15,7 +15,8 @@ class Item extends Model
     'description',
     'quantity',
     'youth_movement',
-    'place'];
+    'place',
+    'photo'];
 
 
     public function reservations()

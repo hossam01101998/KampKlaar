@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users', 'user_id')->onDelete('cascade');
             $table->foreignId('item_id')->constrained('inventory', 'item_id')->onDelete('cascade');
             $table->text('description');
+            $table->string('photo', 255)->nullable();
             $table->timestamp('created_at')->useCurrent();
             });
     }

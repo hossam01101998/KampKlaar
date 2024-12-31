@@ -17,6 +17,12 @@
             <h3>Details</h3>
         </div>
 
+        @if($damageReport->photo)
+
+        <img src="{{ asset($damageReport->photo) }}" alt="Damage report photo" class="img-fluid" style="max-width: 350px; max-height:500px; margin:1%; object-fit: cover; border-radius: 10px;">
+        <br>
+        @endif
+
         <div class="card-body">
             <p><strong>User:</strong> {{ $damageReport->user->username }}</p>
             <p><strong>Item:</strong> {{ $damageReport->item->name }}</p>

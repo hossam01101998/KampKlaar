@@ -62,15 +62,13 @@ class UserProfileController extends Controller
     }
 
 
-
-
    $request->validate([
     'username' => 'required|string|max:100|unique:users,username,' . $user->user_id . ',user_id',
     'email' => 'required|email|max:255|unique:users,email,' . $user->user_id . ',user_id',
     // for phone number we use regex.
     'phone' => 'nullable|regex:/^\+?[0-9]{8,15}$/|max:15|unique:users,phone,' . $user->user_id . ',user_id',
-    //'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-    //'photo' => 'nullable|image,',
+    //'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
+
 
 ]);
 

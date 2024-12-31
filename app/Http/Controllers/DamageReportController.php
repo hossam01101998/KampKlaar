@@ -53,21 +53,29 @@ class DamageReportController extends Controller
             'description' => 'required',
             'item_id' => 'required|exists:inventory,item_id',
         ]);
-                $item = Item::find($request->input('item_id'));
+            $item = Item::find($request->input('item_id'));
 
-                if (!$item) {
-                    return back()->withErrors(['item_id' => 'The selected item does not exist.']);
-                }
-                if ($item->youth_movement !== $userYouthMovement) {
-                    return back()->withErrors(['item_id' => 'The selected item does not belong to your youth movement.']);
-                }
+            if (!$item) {
+                return back()->withErrors(['item_id' => 'The selected item does not exist.']);
+            }
+            if ($item->youth_movement !== $userYouthMovement) {
+                return back()->withErrors(['item_id' => 'The selected item does not belong to your youth movement.']);
+            }
 
+            $photoPath = null;
+        if ($request->hasFile('photo')) {
+            $photo = $request->file('photo');
+            $photoName = time() . '.' . $photo->getClientOriginalExtension();
+            $photo->move(public_path('images/damage_photos'), $photoName);
+            $photoPath = 'images/damage_photos/' . $photoName;
+        }
 
 
         DamageReport::create([
             'user_id' => auth()->user()->user_id,
             'item_id' => $request->input('item_id'),
             'description' => $request->input('description'),
+            'photo' => $photoPath,
         ]);
 
         return redirect()->route('damage_reports.index')->with('success', 'Damage report created successfully!');

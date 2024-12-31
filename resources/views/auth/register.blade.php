@@ -72,7 +72,7 @@
                             <label for="youth_movement" class="col-md-4 col-form-label text-md-end">{{ __('Youth Movement') }}</label>
 
                             <div class="col-md-6">
-                                <input id="youth_movement" type="text" class="form-control @error('youth_movement') is-invalid @enderror" name="youth_movement" value="{{ old('youth_movement') }}" required autocomplete="youth_movement">
+                                <input id="youth_movement" type="text" class="form-control @error('youth_movement') is-invalid @enderror" name="youth_movement" value="{{ old('youth_movement') }}" style="text-transform:uppercase;" required autocomplete="youth_movement">
 
                                 @error('youth_movement')
                                     <span class="invalid-feedback" role="alert">

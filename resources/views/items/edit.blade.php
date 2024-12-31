@@ -28,7 +28,7 @@
         </div>
     @endif
 
-    <form action="{{ route('items.update', $item->item_id) }}" method="POST">
+    <form action="{{ route('items.update', $item->item_id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -47,7 +47,13 @@
             <input type="number" name="quantity" id="quantity" class="form-control" value="{{ old('quantity', $item->quantity) }}" required>
         </div>
 
-
+        <div class="mb-3">
+            <label for="photo" class="form-label">Photo</label>
+            <input type="file" name="photo" class="form-control" >
+            @error('photo')
+            <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
 
         <div class="mb-3">
             <label for="place" class="form-label">Place</label>

@@ -31,8 +31,9 @@ class UserSeeder extends Seeder
 
        User::create([
             'username' => 'hossam12',
-            'youth_movement' => 'Group 1',
+            'youth_movement' => 'ADVENTURE LEADERS',
             'email' => 'hossam@gmail.com',
+            'Phone' => '01111451111',
             'password' => '11111111',
             'isadmin' => true,
         ]);
@@ -44,10 +45,31 @@ class UserSeeder extends Seeder
             User::create([
                 'username' => $faker->userName,
                 'email' => $faker->unique()->email,
+                'Phone' => '0445785546' + $i*5115485,
                 'password' => 'password123',
                 'isadmin' => false,
-                'youth_movement' => 'Group 1']);
+                'youth_movement' => 'ADVENTURE LEADERS']);
 
+        }
+
+        User::create([
+            'username' => 'admin',
+            'youth_movement' => 'NAUTRE EXPLORERS',
+            'email' => 'hossam2@gmail.com',
+            'Phone' => '01111111111',
+            'password' => '11111111',
+            'isadmin' => true,
+        ]);
+
+        $faker = Faker::create();
+        for ($i = 0; $i < 5; $i++) {
+            User::create([
+                'username' => $faker->userName,
+                'email' => $faker->unique()->email,
+                'Phone' => '04521552452' + $i*10115485,
+                'password' => 'password123',
+                'isadmin' => false,
+                'youth_movement' => 'NATURE EXPLORERS']);
 
         }
     }

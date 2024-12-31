@@ -50,12 +50,25 @@ class ItemController extends Controller
         if (!auth()->user()->isadmin) {
             return redirect()->route('home')->with('error', 'You do not have permission to create an item.');
         }
+
+        $photoPath = null;
+        if ($request->hasFile('photo')) {
+            $photo = $request->file('photo');
+            $photoName = time() . '.' . $photo->getClientOriginalExtension();
+            $photo->move(public_path('images/item_photos'), $photoName);
+            $photoPath = 'images/item_photos/' . $photoName;
+        }
+
+
         $request->validate([
             'name' => 'required|string|min:3|max:255',
             'description' => 'nullable|min:10|string',
             'quantity' => 'required|integer|min:1|max:9999',
-            'place' => 'required|string|min:3|max:100'
+            'place' => 'required|string|min:3|max:100',
+            //'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
         ]);
+
+        //dd($request->all());
 
 
         Item::create([
@@ -63,11 +76,11 @@ class ItemController extends Controller
             'description' => $request->description,
             'quantity' => $request->quantity,
             'youth_movement' => Auth::user()->youth_movement,
-            'place' => $request->place
+            'place' => $request->place,
+            'photo' => $photoPath,
         ]);
 
-
-        return redirect()->route('items.index')->with('success', 'Artícle created succesfully.');
+        return redirect()->route('items.index')->with('success', 'Article created succesfully.');
     }
 
 
@@ -91,16 +104,34 @@ class ItemController extends Controller
             return redirect()->route('home')->with('error', 'You do not have permission to update an item.');
         }
 
+        $item = Item::where('item_id', $id)->firstOrFail();
+
+        $photoPath = $item->photo;
+
+        if ($request->hasFile('photo')) {
+            $photo = $request->file('photo');
+            $photoName = time() . '.' . $photo->getClientOriginalExtension();
+            $photo->move(public_path('images/item_photos'), $photoName);
+            $photoPath = 'images/item_photos/' . $photoName;
+        }
+
         $request->validate([
             'name' => 'required|string|min:3|max:255',
             'description' => 'nullable|min:10|string',
             'quantity' => 'required|integer|min:1|max:9999',
             'place' => 'required|string|min:3|max:100',
+            //'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
         ]);
 
 
-        $item = Item::where('item_id', $id)->firstOrFail();
-        $item->update($request->all());
+        //$item->update($request->all());
+        $item->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'quantity' => $request->quantity,
+            'place' => $request->place,
+            'photo' => $photoPath,
+        ]);
 
         return redirect()->route('items.index')->with('success', 'Article updated successfully.');
     }

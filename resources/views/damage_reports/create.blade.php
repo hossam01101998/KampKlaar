@@ -15,7 +15,7 @@
     </div>
     @endif
 
-    <form action="{{ route('damage_reports.store') }}" method="POST">
+    <form action="{{ route('damage_reports.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="form-group">
             <label for="item_id">Item</label>
@@ -30,6 +30,14 @@
         <div class="form-group">
             <label for="description">Description</label>
             <textarea name="description" id="description" class="form-control" rows="4" required></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="photo" class="form-label">Photo</label>
+            <input type="file" name="photo" class="form-control" >
+            @error('photo')
+            <div class="text-danger">{{ $message }}</div>
+            @enderror
         </div>
 
         <button type="submit" class="btn btn-primary mt-3">Submit Report</button>

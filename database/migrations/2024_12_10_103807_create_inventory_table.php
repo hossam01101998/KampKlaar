@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('quantity');
             $table->string('youth_movement', 100);
             $table->string('place', 100);
+            $table->string('photo', 255)->nullable();
             $table->timestamps();
         });
     }

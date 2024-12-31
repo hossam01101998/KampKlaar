@@ -26,6 +26,12 @@
             <h3>{{ $item->name }}</h3>
         </div>
         <div class="card-body">
+            @if($item->photo)
+
+                 <img src="{{ asset($item->photo) }}" alt="{{$item->name}}" class="img-fluid" style="max-width: 350px; max-height:500px; object-fit: cover; border-radius: 10px;">
+                 <br>
+                 <br>
+            @endif
             <p><strong>ID:</strong> {{ $item->item_id }}</p>
             <p><strong>Name:</strong> {{ $item->name }}</p>
             <p><strong>Description:</strong> {{ $item->description }}</p>
