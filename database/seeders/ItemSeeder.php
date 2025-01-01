@@ -108,28 +108,28 @@ class ItemSeeder extends Seeder
             //another youth movement
 
             [
-                'name' => 'Wetsuits',
-                'description' => 'Professional wetsuits, ideal for water sports and diving.',
+                'name' => 'Kayak',
+                'description' => 'Professional kayak, ideal for beginners and intermediate level users.',
                 'quantity' => 12,
-                'place' => 'Warehouse B 12K',
+                'place' => 'Gent Warehouse 13',
                 'youth_movement' => 'NATURE EXPLORERS',
-                'photo'=> 'images/item_photos/wetsuit.jpg',
+                'photo'=> 'images/item_photos/kayak.jpg',
             ],
             [
-                'name' => 'Tents 2-4 people',
-                'description' => 'High-quality tents for 2-4 people, ideal for camping and outdoor activities.',
+                'name' => 'Binooculars',
+                'description' => 'High-quality binoculars, with 10x magnification and anti-glare lenses. For birdwatching and nature observation.',
                 'quantity' => 37,
-                'place' => 'Warehouse B 85S',
+                'place' => 'Gent Warehouse 24',
                 'youth_movement' => 'NATURE EXPLORERS',
-                'photo'=> 'images/item_photos/tents.jpg',
+                'photo'=> 'images/item_photos/binocular.jpg',
             ],
             [
-                'name' => 'Fishing Rod',
-                'description' => 'Professional fishing rod, ideal for freshwater and saltwater fishing.',
+                'name' => 'Scuba Diving Gear',
+                'description' => 'Professional scuba diving gear, including wetsuit, fins, mask, and snorkel.',
                 'quantity' => 24,
-                'place' => 'Warehouse B 115A',
+                'place' => 'Gent Warehouse 51',
                 'youth_movement' => 'NATURE EXPLORERS',
-                'photo'=> 'images/item_photos/fishing.jpg',
+                'photo'=> 'images/item_photos/diving.jpg',
             ],
         ];
 

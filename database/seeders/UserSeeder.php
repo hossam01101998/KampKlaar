@@ -54,7 +54,7 @@ class UserSeeder extends Seeder
 
         User::create([
             'username' => 'admin',
-            'youth_movement' => 'NAUTRE EXPLORERS',
+            'youth_movement' => 'NATURE EXPLORERS',
             'email' => 'hossam2@gmail.com',
             'Phone' => '01111111111',
             'password' => '11111111',
